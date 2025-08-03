@@ -73,7 +73,7 @@ logs/
 
 # Memory Bank 
 # Should be commented out i.e. included in the boilerplate but **usually not** in the project
-# memory-bank/
+memory-bank/
 
 # CustomJS Startup
 customjs-startup.json
