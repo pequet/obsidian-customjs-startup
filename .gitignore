@@ -29,7 +29,7 @@ VENV/
 
 # IDE specific (including symlinks)
 # Should be commented out i.e. included in the boilerplate but **usually not** in the project
-# .cursor
+.cursor
 # .vscode
 # .cursor/
 # .vscode/
@@ -53,12 +53,12 @@ logs/
 
 # Exclude inbox and archive directories (including symlinks)
 # Should be commented out i.e. included in the boilerplate but **usually not** in the project
-# **/inbox
-# **/inbox/
+**/inbox
+**/inbox/
 # **/archive
 # **/archive/
-# **/archives
-# **/archives/
+**/archives
+**/archives/
 # **/archived
 # **/archived/
 # **/trash
@@ -74,3 +74,6 @@ logs/
 # Memory Bank 
 # Should be commented out i.e. included in the boilerplate but **usually not** in the project
 # memory-bank/
+
+# CustomJS Startup
+customjs-startup.json

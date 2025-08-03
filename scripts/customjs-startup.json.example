@@ -1,0 +1,6 @@
+{
+    "filesToLoad": [
+        "path/to/YourClass1.js",
+        "path/to/YourClass2.js"
+    ]
+}

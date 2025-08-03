@@ -3,122 +3,37 @@ type: overview
 domain: system-state
 subject: Obsidian CustomJS Startup
 status: active
-summary: High-level architecture, key design decisions, and system-wide patterns.
+summary: Describes the script's architecture, design decisions, and data management.
 ---
 # System Patterns
 
 ## 1. System Architecture Overview
 
-*   **Overall architecture & justification?** *(e.g., Monolithic, Microservices, Client-Server)*
-
-    * [Enter architecture here]
-
-    *   **Example: Project A** The boilerplate follows a modular architecture, where different components (e.g., AI integration, coding standards, documentation) are separated into distinct modules. This allows for easier maintenance, testing, and customization.
-    *   **Example: Project B** The project follows a component-based architecture, even within the constraints of Pine Script. A central library of functions for core logic, visualization, and input handling will be developed and used by each individual indicator script, ensuring a modular and maintainable system.
-
-*   **High-Level Diagram Link (Recommended):**
-
-    * [Enter diagram here]
-
-    *   **Example: Project A** N/A - A high-level diagram is not currently available for this boilerplate.
-    *   **Example: Project B** N/A - A diagram showing function dependencies could be created later.
+*   **Overall architecture & justification?**
+    The system is a single, self-contained JavaScript file (`startup.js`) designed to be executed by the `CustomJS` plugin within Obsidian. It follows a simple, linear script architecture: it reads a configuration, iterates through a list of files, and executes a load-and-construct operation for each. This minimalist approach ensures low overhead and maximum reliability.
 
 ## 2. Key Architectural Decisions & Rationales
 
-List significant decisions and why they were made.
+*   **Decision 1:** Use an external `customjs-startup.json` for configuration.
+    *   **Rationale:** To decouple the file list from the script's logic, making it easy for users to add, remove, or reorder their custom classes without ever needing to touch the `startup.js` code itself. This improves maintainability and user-friendliness.
+*   **Decision 2:** Use Node.js `fs` and `path` modules to read files directly.
+    *   **Rationale:** This is the core of the solution. It bypasses the standard `CustomJS` import mechanism, which can be unreliable with symlinks or complex vault structures. Direct file access is a more robust and predictable way to get the class definitions.
+*   **Decision 3:** Use `eval()` to execute the class definition.
+    *   **Rationale:** While `eval()` can be dangerous if used on untrusted input, in this context it is a necessary and safe tool. The user is explicitly providing the paths to their *own* scripts. `eval()` is used here to execute the user's own code within the script's scope, making the class definition available for instantiation.
+*   **Decision 4:** Attach class instances to `window.customJS`.
+    *   **Rationale:** To directly mimic the behavior of the `CustomJS` plugin, ensuring seamless compatibility with any existing user workflows that expect their classes to be available on this global object.
 
-* [Enter decisions here]
-
-*   **Example: Project A**
-    *   **Decision 1:** Use a `.cursor/rules` directory to define AI behavior.
-        *   Rationale: This allows for consistent and predictable AI behavior across all projects, enforcing coding standards and best practices.
-    *   **Decision 2:** Integrate with `vibe-tools` for various tasks.
-        *   Rationale: `vibe-tools` provides a powerful set of tools for AI-assisted development, including code generation, documentation, and analysis.
-    *   **Decision 3:** Implement a memory bank system for improved project context and AI continuity.
-        *   Rationale: A memory bank allows the AI to retain project context across sessions, leading to more informed and efficient development.
-    *   **Decision 4:** Use Markdown files for documentation and memory bank entries.
-        *   Rationale: Markdown is a lightweight and easy-to-read format that is well-suited for documentation and knowledge sharing.
-*   **Example: Project B**
-    *   **Decision 1:** Centralize all common logic into a reusable library. **Rationale:** To enforce consistency, reduce code duplication, and simplify maintenance.
-    *   **Decision 2:** Standardize the user input block for all indicators. **Rationale:** To create a consistent user experience and simplify the process of adding new indicators.
-    *   **Decision 3:** Separate calculation logic from plotting/visualization logic within each script. **Rationale:** To improve readability and make it easier to debug or modify either part independently.
-
-## 3. Design Patterns in Use
-
-List key software design patterns and where they are used.
-
-* [Enter patterns here]
-
-*   **Example: Project A**
-    *   **Pattern 1:** Factory Pattern
-        *   Example: Used in `vibe-tools` to create different AI providers and models.
-    *   **Pattern 2:** Singleton Pattern
-        *   Example: Used to ensure that there is only one instance of the memory bank.
-    *   **Pattern 3:** Strategy Pattern
-        *   Example: Used to implement different coding standards and best practices based on the project type.
-*   **Example: Project B**
-    *   **Pattern 1:** Library/Module Pattern. **Example:** The shared `src/core` and `src/visualization` components act as libraries for the individual indicator scripts.
-    *   **Pattern 2:** Template Method Pattern (Conceptual). **Example:** Each indicator follows a standard structural template: 1. Inputs, 2. Calculations, 3. Visualization. This ensures consistency.
-
-## 4. Component Relationships & Interactions
-
-Describe how major components interact.
-
-* [Enter interactions here]
-
-*   **Example: Project A**
-    *   **Interaction 1:** The Cursor IDE interacts with the `.cursor/rules` directory to enforce AI behavior.
-        *   Example: When a developer makes a change to the code, the Cursor IDE uses the rules in `.cursor/rules` to suggest improvements and enforce coding standards.
-    *   **Interaction 2:** The `vibe-tools` CLI interacts with AI providers and models to perform various tasks.
-        *   Example: When a developer runs a `vibe-tools` command, the CLI sends a request to an AI provider (e.g., OpenAI) to generate code, documentation, or analysis.
-    *   **Interaction 3:** The memory bank system interacts with the AI to provide project context and ensure continuity.
-        *   Example: When a developer starts a new session, the AI reads the memory bank to understand the project's goals, requirements, and scope.
-*   **Example: Project B**
-    *   **Interaction 1:** Indicator scripts call functions from the shared component library to perform calculations and visualizations.
-    *   **Interaction 2:** The user interacts with the standardized input panel, which passes parameters to the calculation and visualization logic.
-
-## 5. Data Management & Storage
+## 3. Data Management & Storage
 
 *   **Primary Datastore & Rationale:**
+    The file system is the primary datastore. The script reads from `customjs-startup.json` (user configuration) and the various user-specified `.js` files (class definitions).
+    *   **Rationale:** The entire purpose of the script is to interact with the user's files within their vault. There is no need for a database or any other storage mechanism.
 
-    * [Enter primary datastore here]
+## 4. Integration Points with External Systems
 
-    *   **Example: Project A** The primary data store for this project is the file system.
-        *   Rationale: The file system is simple, easy to use, and well-suited for storing configuration files, documentation, and memory bank entries.
-    *   **Example: Project B** N/A - The project is stateless. All data is provided by the TradingView charting platform in real-time. Configuration is managed via user inputs.
-
-*   **Data Schema Overview/Link:**
-
-    * [Enter data schema here]
-
-    *   **Example: Project A** N/A - There is no formal data schema for this project.
-
-*   **Data Caching Strategies:**
-
-    * [Enter data caching strategies here]
-
-    *   **Example: Project A** N/A - Data caching strategies are not currently implemented in this project.
-
-*   **Data Backup/Recovery Plan:**
-
-    * [Enter data backup/recovery plan here]
-
-    *   **Example: Project A** N/A - Data backup and recovery plans are not currently implemented in this project.
-
-## 6. Integration Points with External Systems
-
-List external services/systems integrations.
-
-* [Enter external systems integrations here]
-
-*   **Example: Project A**
-    *   **System 1:** OpenAI
-    *   **System 2:** Gemini
-    *   **System 3:** GitHub
-*   **Example: Project B**
-    *   **System 1:** TradingView Platform. The scripts are entirely dependent on the TradingView charting environment and its Pine Script API.
-    *   **System 2:** Git/GitHub (for version control and source code management).
-
----
-**How to Use This File Effectively:**
-This document outlines the technical blueprint of the system. Refer to it for understanding architectural choices, design patterns, and how components interact. Update it when significant architectural decisions are made, new patterns are introduced, or data management strategies change. It is crucial for onboarding new developers and ensuring consistent technical approaches.
+*   **System 1:** Obsidian `CustomJS` Plugin
+    *   **Interaction:** `CustomJS` is responsible for executing the `startup.js` script when Obsidian starts. This is the entry point for the entire process.
+*   **System 2:** Obsidian API
+    *   **Interaction:** The script uses the `app.vault.adapter.basePath` property from the Obsidian API to get the absolute path to the vault, which is necessary for resolving the file paths in the configuration.
+*   **System 3:** Node.js Runtime (provided by Obsidian)
+    *   **Interaction:** The script uses the `fs` and `path` modules from the Node.js runtime to perform file system operations.

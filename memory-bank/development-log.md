@@ -31,6 +31,25 @@ Maintain this as a running history of the project. Add entries for any significa
 
 ## Log Entries
 
+*   **Date:** 2025-08-03
+*   **Author(s):** AI Assistant
+*   **Type:** Task
+*   **Summary:** Refactored the startup script and updated all project documentation for public release.
+*   **Details:**
+    *   The `startup.js` script was modified to load class paths from an external `.obsidian/customjs-startup.json` file, removing the hardcoded list.
+    *   The script's header comments and changelog were updated and corrected.
+    *   The project `README.md` was completely rewritten to focus on the script's utility for end-users.
+    *   All files in the `memory-bank/` directory were updated to remove boilerplate examples and reflect the project's actual context and status.
+*   **Outcome:**
+    *   The project is now feature-complete for its initial version.
+    *   All documentation is finalized and ready for publication.
+*   **Relevant Files/Links:**
+    *   `scripts/startup.js`
+    *   `README.md`
+    *   `memory-bank/`
+
+---
+
 *   **Date:** 2025-06-20
 *   **Author(s):** System
 *   **Type:** Milestone
